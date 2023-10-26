@@ -5,7 +5,7 @@ services:
     image: fahmula/emby-merge-versions
     restart: unless-stopped
     ports:
-      - "5000:5000"  # Map host port 5000 to container port 5000
+      - "5000:5000"
     environment:
       - EMBY_BASE_URL=${EMBY_BASE_URL}
       - EMBY_API_KEY=${EMBY_API_KEY}
