@@ -1,0 +1,15 @@
+version: '3'
+services:
+  emby-merge-versions:
+    build: .
+    image: fahmula/emby-merge-versions
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"  # Map host port 5000 to container port 5000
+    environment:
+      - EMBY_BASE_URL=${EMBY_BASE_URL}
+      - EMBY_API_KEY=${EMBY_API_KEY}
+    command: python main.py
+    env_file:
+      - .env
