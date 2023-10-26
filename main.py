@@ -41,7 +41,7 @@ def merge_movies(item_id_1, item_id_2):
 
 
 def search_movies(prov_id):
-    url = f"{EMBY_BASE_URL}/emby/Items?Recursive=true&AnyProviderIdEquals=tmdb.{prov_id}&api_key={EMBY_API_KEY}"
+    url = f"{EMBY_BASE_URL}/emby/Items?Recursive=true&AnyProviderIdEquals={prov_id}&api_key={EMBY_API_KEY}"
     response = requests.get(url)
     movie_ids = []
     for item in response.json()["Items"]:
@@ -59,7 +59,9 @@ def webhook_listener():
     # Search for movies using each provider ID until at least two movie IDs are found
     for provider_id in provider_ids_to_search:
         if 'ProviderIds' in data['Item'] and provider_id in data['Item']['ProviderIds']:
-            movies = search_movies(data['Item']['ProviderIds'][provider_id])
+            prov_key = provider_id.lower()  # Convert the provider key to lowercase
+            prov_value = data['Item']['ProviderIds'][provider_id]
+            movies = search_movies(f"{prov_key}.{prov_value}")
             if len(movies) >= 2:
                 break  # Stop searching if two or more movies are found
 
