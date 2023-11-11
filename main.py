@@ -29,12 +29,12 @@ HEADERS = {'accept': 'application/json', }
 
 
 # Merge HD and UHD Movies
-def merge_movies(item_id_1, item_id_2):
+def merge_movies(item_id_1, item_id_2, movie_name_1):
     url = f"{EMBY_BASE_URL}/emby/Videos/MergeVersions?Ids={item_id_1},{item_id_2}&api_key={EMBY_API_KEY}"
     response = requests.post(url, headers=HEADERS,)
     if response.status_code == 204:
-        logging.info('Merge Successful')
-        return 'Merge Successful'
+        logging.info(f'Merge Successful for movie: {movie_name_1}')
+        return f'Merge Successful for movie: {movie_name_1}'
     else:
         logging.error('Merge Unsuccessful')
         return 'Merge Unsuccessful'
@@ -43,11 +43,12 @@ def merge_movies(item_id_1, item_id_2):
 def search_movies(prov_id):
     url = f"{EMBY_BASE_URL}/emby/Items?Recursive=true&AnyProviderIdEquals={prov_id}&api_key={EMBY_API_KEY}"
     response = requests.get(url)
-    movie_ids = []
+    movies_data = []
     for item in response.json()["Items"]:
         item_id = item["Id"]
-        movie_ids.append(item_id)
-    return movie_ids
+        item_name = item["Name"]
+        movies_data.append({"id": item_id, "name": item_name})
+    return movies_data
 
 
 @app.route('/emby-webhook', methods=['POST'])
@@ -65,12 +66,14 @@ def webhook_listener():
             if len(movies) >= 2:
                 break  # Stop searching if two or more movies are found
 
+    # Inside the /emby-webhook endpoint
     if movies is not None and len(movies) == 2:
         movie_1, movie_2 = movies
-        merger = merge_movies(movie_1, movie_2)
+        merger = merge_movies(movie_1["id"], movie_2["id"], movie_1["name"])
         return merger
     else:
-        logging.info('No merge performed, not enough movie IDs were found')
+        movie_name = movies[0]["name"] if movies else "unknown"
+        logging.info(f'No merge performed for {movie_name}, not enough movie IDs were found')
         return 'No merge performed, not enough movie IDs were found'
 
 
