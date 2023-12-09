@@ -38,10 +38,21 @@ If you have Docker and Docker Compose installed, you can use the provided `docke
 
 ### Setting up Emby Webhook
 
+### For Emby Server 4.7 or Lower:
+
 1. Go to Emby settings.
 2. Choose `Webhook` and add a new webhook.
-3. Set the url to (e.g., `http://192.168.1.1:5000/emby-webhook`).
-4. Select `libary new media added`.
+3. Set the server to the Flask application's endpoint (e.g., `http://192.168.1.1:5000/emby-webhook`).
+4. Under `Library`, select `New Media Added`.
+
+#### For Emby Server 4.8 or Higher:
+
+1. Go to Emby settings.
+2. Choose `Notification` and add a new notification.
+3. Select `Webhooks` as the notification type.
+4. Set the server to the Flask application's endpoint (e.g., `http://192.168.1.1:5000/emby-webhook`).
+5. You can set `Request content type` to either `multipart/form-data` or `application/json`.
+6. Under `Library`, select `New Media Added`.
 
 ## Contributing
 
