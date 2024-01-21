@@ -2,19 +2,18 @@
 
 ## Introduction
 
-The Emby Webhook Automation is a Python script that serves as a webhook listener for the Emby media server. It's designed to automate the merging of movies in your Emby library based on provider IDs received through webhooks.
+The Emby Webhook Automation is a Python script that serves as a webhook listener for the Emby media server. It's designed to automate the merging of movies in your Emby library based on Tmdb ID received through webhooks.
 
 ## Features
 
-- Automatically merge two movies in the Emby library based on matching provider IDs.
-- Supports multiple `ProviderIds` for searching movies.
+- Automatically merge two movies in the Emby library based on matching Tmdb ID.
 - Logs the merge results, including successful and unsuccessful merges.
 
 ## Prerequisites
 
 Before using this script, ensure you have the following:
 
-- Python 3.x installed
+- Python 3.11 installed
 - Required Python libraries: Flask, requests
 - Docker (optional, for Docker installation)
 
