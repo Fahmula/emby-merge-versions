@@ -2,7 +2,7 @@ version: '3'
 services:
   emby-merge-versions:
     container_name: emby-merge-versions
-    image: fahmula/emby-merge-versions
+    image: ghcr.io/fahmula/emby-merge-versions:latest
     restart: unless-stopped
     ports:
       - "5000:5000"
