@@ -94,7 +94,7 @@ def webhook_listener():
         session.close()
         return merger
 
-    elif len(movies) > 2:
+    elif movies is not None and len(movies) > 2:
         logging.info(
             f"No merge performed for {movie_name}, more than two movie IDs were found"
         )
