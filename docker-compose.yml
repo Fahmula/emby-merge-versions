@@ -9,5 +9,6 @@ services:
     environment:
       - EMBY_BASE_URL=${EMBY_BASE_URL}
       - EMBY_API_KEY=${EMBY_API_KEY}
+      - IGNORE_LIBRARY=${IGNORE_LIBRARY}
     env_file:
       - .env

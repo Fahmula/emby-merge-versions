@@ -8,12 +8,13 @@ The Emby Webhook Automation is a Python script that serves as a webhook listener
 
 - Automatically merge two movies in the Emby library based on matching Tmdb ID.
 - Logs the merge results, including successful and unsuccessful merges.
+- Supports an ignore list to exclude specific libraries from the merge process.
 
 ## Prerequisites
 
 Before using this script, ensure you have the following:
 
-- Python 3.11 installed
+- Python 3.12 installed
 - Required Python libraries: Flask, requests
 - Docker (optional, for Docker installation)
 
@@ -37,7 +38,7 @@ If you have Docker and Docker Compose installed, you can use the provided `docke
 
 ### Setting up Emby Webhook
 
-### For Emby Server 4.7 or Lower:
+#### For Emby Server 4.7 or Lower:
 
 1. Go to Emby settings.
 2. Choose `Webhook` and add a new webhook.
@@ -52,6 +53,14 @@ If you have Docker and Docker Compose installed, you can use the provided `docke
 4. Set the server to the Flask application's endpoint (e.g., `http://192.168.1.1:5000/emby-webhook`).
 5. You can set `Request content type` to either `multipart/form-data` or `application/json`.
 6. Under `Library`, select `New Media Added`.
+
+### Configuring the Ignore Library Feature
+
+To exclude specific movie libraries from the merge process, you can use the ignore list feature. This is particularly useful if you have separate libraries for different types of content that you do not wish to merge.
+
+1. Identify the libraries you want to exclude from the merge process.
+2. In your `.env` file, set the `IGNORE_LIBRARY` variable to a comma-separated list of library paths you wish to ignore. For example:
+3. If your library path is `/data/media/trending` you can set `IGNORE_LIBRARY="trending"`
 
 ## Contributing
 
