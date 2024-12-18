@@ -1,4 +1,4 @@
-name: build and push docker image
+name: Build and Push Docker Image
 
 on:
   push:
@@ -9,24 +9,57 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up repository
+        uses: actions/checkout@v3
+
       - name: Convert GITHUB_REPOSITORY to lowercase
         run: echo "IMAGE_NAME=$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-      - 
-        name: Set up QEMU
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      - 
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - 
-        name: Login to GitHub Container Registry
+
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - 
-        name: Build and push
+
+      - name: Determine year.month tag and increment if necessary
+        id: determine_tag
+        run: |
+          YEAR_MONTH=$(date +"%y.%m")
+          git fetch --tags
+          latest_tag=$(git tag --list "${YEAR_MONTH}*" | sort -V | tail -n 1)
+
+          if [ -z "$latest_tag" ]; then
+            IMAGE_TAG="${YEAR_MONTH}"
+          elif [[ "$latest_tag" == "$YEAR_MONTH" ]]; then
+            IMAGE_TAG="${YEAR_MONTH}.1"
+          else
+            build_number=$(echo $latest_tag | awk -F '.' '{print $NF}')
+            build_number=$((build_number + 1))
+            IMAGE_TAG="${YEAR_MONTH}.${build_number}"
+          fi
+
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Create and push the new tag
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git tag ${{ env.IMAGE_TAG }}
+          git push origin ${{ env.IMAGE_TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAME }}
+          tags: |
+            ghcr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ghcr.io/${{ env.IMAGE_NAME }}:latest
