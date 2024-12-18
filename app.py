@@ -93,7 +93,7 @@ def merge_on_start():
         merge_movies(movies)
 
 # Route Definitions
-@app.route("/webhook", methods=["POST"])
+@app.route("/emby-webhook", methods=["POST"])
 def webhook_listener():
     """Handle incoming webhook requests."""
     try:
