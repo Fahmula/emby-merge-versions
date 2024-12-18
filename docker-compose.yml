@@ -7,8 +7,10 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - EMBY_BASE_URL=${EMBY_BASE_URL}
-      - EMBY_API_KEY=${EMBY_API_KEY}
-      - IGNORE_LIBRARY=${IGNORE_LIBRARY}
-    env_file:
-      - .env
+      - EMBY_BASE_URL=http://192.168.1.5:8096
+      - EMBY_API_KEY=123456789
+      - IGNORE_LIBRARY=trending
+      - MERGE_ON_START=no
+    volumes:
+      - /mnt/cache/appdata/merge-versions/logs:/app/logs
+

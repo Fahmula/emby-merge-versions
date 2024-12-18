@@ -1,10 +1,11 @@
 import json
 import os
 import logging
+import requests
 from logging.handlers import TimedRotatingFileHandler
 from flask import Flask, request
-import requests
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables
 load_dotenv()
@@ -13,7 +14,9 @@ load_dotenv()
 app = Flask(__name__)
 
 # Set up logging
-log_filename = "emby-merge-version.log"
+log_folder = Path("logs")
+log_folder.mkdir(exist_ok=True)
+log_filename = log_folder / "emby-merge-version.log"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
