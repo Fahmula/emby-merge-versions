@@ -25,24 +25,6 @@ Before using this script, ensure you have the following:
 ### Docker Installation
 If you have Docker and Docker Compose installed, you can use the provided `docker-compose.yml` file.
 
-Below is an example `docker-compose.yml`:
-
-version: '3'
-services:
-  emby-merge-versions:
-    container_name: emby-merge-versions
-    image: ghcr.io/fahmula/emby-merge-versions:latest
-    restart: unless-stopped
-    ports:
-      - "5000:5000"
-    environment:
-      - EMBY_BASE_URL=http://192.168.1.5:8096
-      - EMBY_API_KEY=123456789
-      - IGNORE_LIBRARY=trending
-      - MERGE_ON_START=no
-    volumes:
-      - /mnt/cache/appdata/merge-versions/logs:/app/logs
-
 To run the application:
 docker-compose up
 
@@ -72,6 +54,20 @@ IGNORE_LIBRARY="trending,other_library"
 
 If your library path is `/data/media/trending`, set:
 IGNORE_LIBRARY="trending"
+
+### Configuring the Merge on Start Feature
+To automatically merge all movies at startup, set the `MERGE_ON_START` variable in the docker-compose.yml file to `yes`. After the initial merge has completed, you can set it back to `no` to prevent unnecessary merges on subsequent restarts.
+
+For example:
+
+environment:
+  - `MERGE_ON_START`=`yes`
+
+Once done, you can revert it:
+
+environment:
+  - `MERGE_ON_START`=`no`
+
 
 ### Logs
 Logs are stored in the directory you mapped in the `docker-compose.yml`. In the example above, logs will be stored at:
